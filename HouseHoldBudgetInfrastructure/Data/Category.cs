@@ -16,7 +16,11 @@ namespace HouseHoldBudget.Infrastructure.Data
         [StringLength(50, MinimumLength = 5)]
         public string Name { get; set; } = null!;
 
-        [StringLength(100, MinimumLength = 5)]
+        [StringLength(500, MinimumLength = 5)]
         public string? Detail { get; set; }
+
+        [Required]
+        [StringLength(2000)]
+        public string ImageUrl { get; set; } = null!;
     }
 }

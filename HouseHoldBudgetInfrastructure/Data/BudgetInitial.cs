@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -38,6 +39,8 @@ namespace HouseHoldBudget.Infrastructure.Data
         public DateTime Date { get; set; }
 
         [Required]
+        [Column(TypeName = "money")]
+        [Precision(18, 2)]
         public decimal Amount { get; set; }
 
         [StringLength(100, MinimumLength = 5)]
