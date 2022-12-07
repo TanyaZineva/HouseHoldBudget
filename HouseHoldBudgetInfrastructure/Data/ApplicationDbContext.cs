@@ -25,6 +25,8 @@ namespace HouseHoldBudget.Infrastructure.Data
         {
             builder.Entity<UserBudgetInitial>()
                 .HasKey(x => new { x.UserId, x.BudgetInitialId });
+            builder.Entity<UserHouseHold>()
+                .HasKey(x => new { x.UserId, x.HouseHoldId });
 
             builder.ApplyConfiguration(new CategoryConfiguration());
             builder.ApplyConfiguration(new CurrencyConfiguration());

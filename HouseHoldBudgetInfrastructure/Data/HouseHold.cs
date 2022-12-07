@@ -20,6 +20,6 @@ namespace HouseHoldBudget.Infrastructure.Data
         [Required]
         public string Member { get; set; } = null!;
 
-        public List<User> Users { get; set; } = new List<User>();
+        public List<UserHouseHold> Users { get; set; } = new List<UserHouseHold>();
     }
 }

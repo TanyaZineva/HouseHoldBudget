@@ -13,7 +13,6 @@ namespace HouseHoldBudget.Infrastructure.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.Property(p => p.HouseHoldId);
             
             builder.Ignore(c => c.UserBudgetInitials);
                 

@@ -11,12 +11,6 @@ namespace HouseHoldBudget.Infrastructure.Data
 {
     public class User:IdentityUser
     {
-        
-        public int HouseHoldId { get; set; }
-
-        [ForeignKey(nameof(HouseHoldId))]
-        public HouseHold HouseHold { get; set; } = null!;
-
         public List<UserBudgetInitial> UserBudgetInitials { get; set; } = new List<UserBudgetInitial>();
     }
 }
