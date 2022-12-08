@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Create or choose existing Household";
+}
+
+<h1 class="text-center">@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-md-4 offset-md-4">
+        <section>
+            <form class="input-group-sm" asp-controller="HouseHold" method="post">
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="text-center">
+                    <button id="login-submit" type="submit" class="btn btn-primary">Create Household</button>
+                </div>
+                <div class="text-center">
+                    <button id="login-submit" type="submit" class="btn btn-primary">Choose existing Household</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>

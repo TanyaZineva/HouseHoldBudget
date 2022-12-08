@@ -12,5 +12,6 @@ namespace HouseHoldBudget.Infrastructure.Data
     public class User:IdentityUser
     {
         public List<UserBudgetInitial> UserBudgetInitials { get; set; } = new List<UserBudgetInitial>();
+        public List<UserHouseHold> UserHouseHolds { get; set; } = new List<UserHouseHold>();
     }
 }

@@ -15,7 +15,8 @@ namespace HouseHoldBudget.Infrastructure.Data.Configuration
         {
             
             builder.Ignore(c => c.UserBudgetInitials);
-                
+            builder.Ignore(c => c.UserHouseHolds);
+
         }
     }
 }

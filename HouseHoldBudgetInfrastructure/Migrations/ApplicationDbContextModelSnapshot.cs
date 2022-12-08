@@ -226,9 +226,10 @@ namespace HouseHoldBudget.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Member")
+                    b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -551,7 +552,7 @@ namespace HouseHoldBudget.Infrastructure.Migrations
             modelBuilder.Entity("HouseHoldBudget.Infrastructure.Data.UserHouseHold", b =>
                 {
                     b.HasOne("HouseHoldBudget.Infrastructure.Data.HouseHold", "HouseHold")
-                        .WithMany("Users")
+                        .WithMany("UserHouseHolds")
                         .HasForeignKey("HouseHoldId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -625,7 +626,7 @@ namespace HouseHoldBudget.Infrastructure.Migrations
 
             modelBuilder.Entity("HouseHoldBudget.Infrastructure.Data.HouseHold", b =>
                 {
-                    b.Navigation("Users");
+                    b.Navigation("UserHouseHolds");
                 });
 #pragma warning restore 612, 618
         }

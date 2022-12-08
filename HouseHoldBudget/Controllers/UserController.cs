@@ -49,7 +49,7 @@ namespace HouseHoldBudget.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Login", "User");
+                return RedirectToAction("OptionsAddOrCreate", "HouseHold");
             }
 
             foreach (var item in result.Errors)

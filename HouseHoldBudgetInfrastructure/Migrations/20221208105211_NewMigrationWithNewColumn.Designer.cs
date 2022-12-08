@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HouseHoldBudget.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221205161451_InitialDatabaseWithTables")]
-    partial class InitialDatabaseWithTables
+    [Migration("20221208105211_NewMigrationWithNewColumn")]
+    partial class NewMigrationWithNewColumn
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,7 +38,8 @@ namespace HouseHoldBudget.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("money");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
@@ -72,8 +73,13 @@ namespace HouseHoldBudget.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Detail")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -88,68 +94,81 @@ namespace HouseHoldBudget.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
+                            ImageUrl = "https://mpng.subpng.com/20200228/kzx/transparent-assets-icon-loan-icon-fintech-icon-5e59c31a69f9f5.2406849615829409544341.jpg",
                             Name = "Loans/Mortgage"
                         },
                         new
                         {
                             Id = 2,
+                            ImageUrl = "https://w7.pngwing.com/pngs/359/237/png-transparent-rail-transport-logistics-mode-of-transport-public-transport-beautifully-global-travel-background-material-freight-transport-service-logo.png",
                             Name = "Transportation"
                         },
                         new
                         {
                             Id = 3,
+                            ImageUrl = "https://previews.123rf.com/images/fdsstudio/fdsstudio1905/fdsstudio190500013/122776211-food-icon-on-white-background-cutlery-as-a-symbol-of-food-vector-logo-for-graphic-design-.jpg",
                             Name = "Food"
                         },
                         new
                         {
                             Id = 4,
                             Detail = "Utilities generally include your gas, electricity, water, and sewage bills",
+                            ImageUrl = "https://as1.ftcdn.net/v2/jpg/04/36/98/62/1000_F_436986282_xPXikgyys8ghwYx1rYJewxKPKHLM7lVv.jpg",
                             Name = "Utilities"
                         },
                         new
                         {
                             Id = 5,
                             Detail = "Medical care, dental appointments",
+                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSco2fhPOojGcC3duj_oajm6FJyho3ugGP8NhojGwBAyfQs34CBMyud-ALrKcJ_bdxMNj8&usqp=CAU",
                             Name = "Medical & Healthcare"
                         },
                         new
                         {
                             Id = 6,
+                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3LZt2J5V_rt89Jj1dsT09dFzfxWlfFaikUQ&usqp=CAU",
                             Name = "Clothes and shoes"
                         },
                         new
                         {
                             Id = 7,
+                            ImageUrl = "https://cdn.iconscout.com/icon/premium/png-256-thumb/hobbies-1651245-1403352.png",
                             Name = "Hobbies"
                         },
                         new
                         {
                             Id = 8,
+                            ImageUrl = "https://png.pngtree.com/element_our/png/20180807/pngtree-pinmark-vacation-icon-and-concept-png-image_54653.jpg",
                             Name = "Vacation"
                         },
                         new
                         {
                             Id = 9,
+                            ImageUrl = "https://img.freepik.com/premium-vector/restaurant-icon-concept-with-icon-design_24911-17835.jpg",
                             Name = "Restaurants"
                         },
                         new
                         {
                             Id = 10,
+                            ImageUrl = "https://images.all-free-download.com/images/graphiclarge/home_decor_background_chair_light_table_flowerpot_icons_6838281.jpg",
                             Name = "Home decor and furnishings"
                         },
                         new
                         {
                             Id = 11,
+                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf4l7pqQ83E-tDbAKZNZEEn8Wi7mt-rBM-1w&usqp=CAU",
                             Name = "Saving"
                         },
                         new
                         {
                             Id = 12,
+                            ImageUrl = "https://cdn-icons-png.flaticon.com/512/4988/4988659.png",
                             Name = "Investing"
                         },
                         new
                         {
                             Id = 13,
+                            ImageUrl = "https://i1.sndcdn.com/avatars-000330114611-hkocch-t500x500.jpg",
                             Name = "Others"
                         });
                 });
@@ -209,9 +228,10 @@ namespace HouseHoldBudget.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Member")
+                    b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -272,9 +292,6 @@ namespace HouseHoldBudget.Infrastructure.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int>("HouseHoldId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -310,8 +327,6 @@ namespace HouseHoldBudget.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HouseHoldId");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -336,6 +351,21 @@ namespace HouseHoldBudget.Infrastructure.Migrations
                     b.HasIndex("BudgetInitialId");
 
                     b.ToTable("UserBudgetInitial");
+                });
+
+            modelBuilder.Entity("HouseHoldBudget.Infrastructure.Data.UserHouseHold", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("HouseHoldId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "HouseHoldId");
+
+                    b.HasIndex("HouseHoldId");
+
+                    b.ToTable("UserHouseHold");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -502,17 +532,6 @@ namespace HouseHoldBudget.Infrastructure.Migrations
                     b.Navigation("TypeOfAccount");
                 });
 
-            modelBuilder.Entity("HouseHoldBudget.Infrastructure.Data.User", b =>
-                {
-                    b.HasOne("HouseHoldBudget.Infrastructure.Data.HouseHold", "HouseHold")
-                        .WithMany("Users")
-                        .HasForeignKey("HouseHoldId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("HouseHold");
-                });
-
             modelBuilder.Entity("HouseHoldBudget.Infrastructure.Data.UserBudgetInitial", b =>
                 {
                     b.HasOne("HouseHoldBudget.Infrastructure.Data.BudgetInitial", "BudgetInitial")
@@ -528,6 +547,25 @@ namespace HouseHoldBudget.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("BudgetInitial");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HouseHoldBudget.Infrastructure.Data.UserHouseHold", b =>
+                {
+                    b.HasOne("HouseHoldBudget.Infrastructure.Data.HouseHold", "HouseHold")
+                        .WithMany("Users")
+                        .HasForeignKey("HouseHoldId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HouseHoldBudget.Infrastructure.Data.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HouseHold");
 
                     b.Navigation("User");
                 });

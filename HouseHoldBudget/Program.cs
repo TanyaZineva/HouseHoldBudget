@@ -1,5 +1,8 @@
 
+using HouseHoldBudget.Core.Contracts;
+using HouseHoldBudget.Core.Services;
 using HouseHoldBudget.Infrastructure.Data;
+using HouseHoldBudget.Infrastructure.Data.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +23,14 @@ builder.Services.AddDefaultIdentity<User>(options =>
 })
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/User/Login/";
+});
+
+builder.Services.AddScoped<IHouseHold, HouseHoldService>();
+builder.Services.AddScoped<IRepository, Repository>();
 
 var app = builder.Build();
 

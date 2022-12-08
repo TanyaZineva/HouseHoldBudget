@@ -16,7 +16,7 @@ namespace HouseHoldBudget.Infrastructure.Data
         public HouseHold HouseHold { get; set; } = null!;
 
         [Required]
-        public string UserId { get; set; }
+        public string UserId { get; set; } = null!;
 
         [Required]
         [ForeignKey(nameof(UserId))]
