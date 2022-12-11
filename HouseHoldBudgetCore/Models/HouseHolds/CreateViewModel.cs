@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HouseHoldBudget.Core.Models.HouseHold
+namespace HouseHoldBudget.Core.Models.HouseHolds
 {
     public class CreateViewModel
     {

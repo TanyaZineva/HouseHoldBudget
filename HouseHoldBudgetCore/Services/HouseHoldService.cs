@@ -1,11 +1,12 @@
 ﻿using HouseHoldBudget.Core.Contracts;
-using HouseHoldBudget.Core.Models.HouseHold;
+using HouseHoldBudget.Core.Models.HouseHolds;
 using HouseHoldBudget.Infrastructure.Data;
 using HouseHoldBudget.Infrastructure.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,7 +25,6 @@ namespace HouseHoldBudget.Core.Services
         {
             var user = await repo.All<User>()
                 .Where(u => u.Id == userId)
-                .Include(u => u.UserHouseHolds)
                 .FirstOrDefaultAsync();
 
             if (user == null)
@@ -53,18 +53,32 @@ namespace HouseHoldBudget.Core.Services
             }
         }
 
-            public async Task Create(CreateViewModel model)
+            public async Task Create(CreateViewModel model, string userId)
             {
                 var houseHold = new HouseHold()
                 {
-                    Id = model.Id,
                     Name = model.Name,
                     Address = model.Address
                 };
 
                 await repo.AddAsync(houseHold);
                 await repo.SaveChangesAsync();
-            }
+
+
+            var userHouseHold = new UserHouseHold()
+            {
+                UserId = userId,
+                HouseHoldId = houseHold.Id,
+            };
+            await repo.AddAsync(userHouseHold);
+            await repo.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<HouseHold>> GetHouseholdAsync()
+        {
+            return await repo.All<HouseHold>()
+                .ToListAsync();
+        }
     }
         
 }
