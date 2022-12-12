@@ -1,4 +1,5 @@
-﻿using HouseHoldBudget.Core.Contracts;
+﻿using HouseHoldBudget.Core.Constants;
+using HouseHoldBudget.Core.Contracts;
 using HouseHoldBudget.Core.Models.HouseHolds;
 using HouseHoldBudget.Core.Models.User;
 using HouseHoldBudget.Core.Services;
@@ -11,6 +12,7 @@ using System.Security.Claims;
 
 namespace HouseHoldBudget.Controllers
 {
+    [Authorize]
     public class HouseHoldController : Controller
     {
         private readonly IHouseHold houseHoldService;
@@ -19,12 +21,16 @@ namespace HouseHoldBudget.Controllers
         {
             this.houseHoldService = houseHoldService;    
         }
+
+        [HttpGet]
         public IActionResult OptionsAddOrCreate()
         {
             return View();
         }
 
+        
         [HttpGet]
+
         public  IActionResult Create()
         {
             var model = new CreateViewModel();
@@ -43,8 +49,13 @@ namespace HouseHoldBudget.Controllers
             try
             {
                 var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (await houseHoldService.ExistsUserById(userId))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                
                 await houseHoldService.Create(model, userId);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");               
             }
             catch (Exception)
             {
@@ -70,6 +81,10 @@ namespace HouseHoldBudget.Controllers
             try
             {
                 var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (await houseHoldService.ExistsUserById(userId))
+                {
+                    return RedirectToAction("Index", "Home");
+                }
                 await houseHoldService.AddHouseHoldToCollectionAsync(houseHoldId, userId);
             }
             catch (Exception)

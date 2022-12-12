@@ -14,5 +14,8 @@ namespace HouseHoldBudget.Core.Contracts
 
         Task AddHouseHoldToCollectionAsync(int houseHoldId, string userId);
         Task<IEnumerable<HouseHold>> GetHouseholdAsync();
+
+        public Task<bool> ExistsUserById(string userId);
+        
     }
 }

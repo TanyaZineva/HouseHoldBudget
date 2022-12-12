@@ -39,18 +39,19 @@ namespace HouseHoldBudget.Core.Services
                 throw new ArgumentException("Invalid household Id");
             }
 
-            if (!user.UserHouseHolds.Any(m => m.HouseHoldId == houseHoldId))
+            //if (!user.UserHouseHolds.Any(m => m.HouseHoldId == houseHoldId))
+            //{
+            var userHouseHold = new UserHouseHold()
             {
-                user.UserHouseHolds.Add(new UserHouseHold()
-                {
-                    HouseHold = houseHold,
-                    User = user,
-                    HouseHoldId = houseHoldId,
-                    UserId = userId
-                });
-
-                await repo.SaveChangesAsync();
-            }
+                HouseHold = houseHold,
+                User = user,
+                HouseHoldId = houseHoldId,
+                UserId = userId
+            };
+              
+            await repo.AddAsync(userHouseHold);
+            await repo.SaveChangesAsync();
+            
         }
 
             public async Task Create(CreateViewModel model, string userId)
@@ -72,6 +73,12 @@ namespace HouseHoldBudget.Core.Services
             };
             await repo.AddAsync(userHouseHold);
             await repo.SaveChangesAsync();
+        }
+
+        public async Task<bool> ExistsUserById(string userId)
+        {
+            return await repo.All<UserHouseHold>()
+                .AnyAsync(a => a.UserId == userId);
         }
 
         public async Task<IEnumerable<HouseHold>> GetHouseholdAsync()

@@ -1,8 +1,11 @@
 ﻿using HouseHoldBudget.Core.Models.User;
+using HouseHoldBudget.Core.Services;
 using HouseHoldBudget.Infrastructure.Data;
+using HouseHoldBudget.Infrastructure.Data.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HouseHoldBudget.Controllers
 {
@@ -11,11 +14,14 @@ namespace HouseHoldBudget.Controllers
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
+        private readonly IRepository repo;
 
         public UserController(
             UserManager<User> userManager,
-            SignInManager<User> signInManager)
+            SignInManager<User> signInManager,
+            IRepository repo)
         {
+            this.repo = repo;
             this.userManager = userManager;
             this.signInManager = signInManager;
         }
@@ -49,7 +55,7 @@ namespace HouseHoldBudget.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction("OptionsAddOrCreate", "HouseHold");
+                return RedirectToAction("Login", "User");
             }
 
             foreach (var item in result.Errors)
@@ -87,6 +93,10 @@ namespace HouseHoldBudget.Controllers
 
                 if (result.Succeeded)
                 {
+                    if (!await repo.AllReadonly<UserHouseHold>().AnyAsync(u=> u.UserId== user.Id))
+                    {
+                        return RedirectToAction("OptionsAddOrCreate", "Household");
+                    }
                     return RedirectToAction("Index", "Home");
                 }
             }
