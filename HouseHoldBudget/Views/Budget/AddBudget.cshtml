@@ -1,0 +1,70 @@
+﻿@using HouseHoldBudget.Infrastructure.Data
+@model HouseHoldBudget.Core.Models.Budget.AddBudgetViewModel
+@{
+    ViewBag.Title = "Add income or expense in your Budget";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+}
+<div class="row">
+    <div class="col-md-4 offset-md-4">
+        <form method="post">
+            <div class="mb-3">
+                <label asp-for="@Model.TypeOfAccountId" class="form-label">Type of account</label>
+                <select asp-for="@Model.TypeOfAccountId" class="form-control">
+
+                    @foreach (var type in Model.TypeOfAccounts)
+                    {
+                        <option value="@type.Id">@type.Type</option>
+                    }
+                </select>
+                <span asp-validation-for="TypeOfAccountId" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.CategoryId" class="form-label">Category</label>
+                <select asp-for="@Model.CategoryId" class="form-control">
+
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.CurrencyId" class="form-label">Currency</label>
+                <select asp-for="@Model.CurrencyId" class="form-control">
+
+                    @foreach (var currency in Model.Currencies)
+                    {
+                        <option value="@currency.Id">@currency.CurrencyName</option>
+                    }
+                </select>
+                <span asp-validation-for="CurrencyId" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.Amount">Amount</label>
+                <input class="form-control" aria-required="true" asp-for="@Model.Amount" />
+                <span asp-validation-for="@Model.Amount" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.Date">Date</label>
+                <input class="form-control" type="datetime-local" aria-required="true" asp-for="@Model.Amount" />
+                <span asp-validation-for="@Model.Date" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.AdditionalInformation">Additional information</label>
+                <input rows="4" class="form-control" aria-required="true" asp-for="@Model.AdditionalInformation" />
+                <span asp-validation-for="@Model.AdditionalInformation" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <input class="btn btn-primary" type="submit" value="Add" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
