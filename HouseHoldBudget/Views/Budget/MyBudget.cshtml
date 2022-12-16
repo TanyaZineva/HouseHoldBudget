@@ -1,0 +1,37 @@
+﻿@model IEnumerable<HouseHoldBudget.Core.Models.Budget.MyBudgetViewModel>
+
+@{
+    ViewBag.Title = "My Budget";
+}
+<div><b>Table Format Data Displaying in ForEach</b><br /></div>
+<table class="table table-bordered table-responsive table-hover">
+    <tr>
+        <th>Delete</th>
+        <th>Edit</th>
+        <th>Type of account</th>
+        <th>Category</th>
+        <th>Currency</th>
+        <th>Amount</th>
+        <th>Amount in BGN</th>
+        <th>Date</th>
+        <th>Additional information</th>
+    </tr>
+    @foreach (var bInitial in Model)
+    {
+        <tr>
+            <td>
+                <form class="input-group-sm" asp-controller="Budget" asp-action="Delete" asp-route-id="@bInitial.Id">
+                    <input class="fs-6 btn btn-success mb-3 p-2" type="submit" value="Remove from Collection" />
+                </form>
+            </td>
+            <td>@Html.ActionLink("Edit", "Edit", new { id=bInitial.Id})</td>
+            <td>@bInitial.TypeOfAccount</td>
+            <td>@bInitial.Category</td>
+            <td>@bInitial.Currency</td>
+            <td>@bInitial.Amount</td>
+            <td>@bInitial.AmountInBgn</td>
+            <td>@bInitial.Date</td>
+            <td>@bInitial.AdditionalInformation</td>
+        </tr>
+    }
+</table>

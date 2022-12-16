@@ -36,15 +36,16 @@ namespace HouseHoldBudget.Infrastructure.Data
         public TypeOfAccount TypeOfAccount { get; set; } = null!;
 
         [Required]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         public DateTime Date { get; set; }
 
         [Required]
-        [Column(TypeName = "money")]
         [Precision(18, 2)]
         public decimal Amount { get; set; }
 
         [StringLength(100, MinimumLength = 5)]
-        public string AdditionalInformation { get; set; } = null!;
+        public string? AdditionalInformation { get; set; } = null!;
 
         public List<UserBudgetInitial> UserBudgetInitials { get; set; } = new List<UserBudgetInitial>();
     }

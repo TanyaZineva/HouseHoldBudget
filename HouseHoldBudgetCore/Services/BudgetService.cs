@@ -31,11 +31,8 @@ namespace HouseHoldBudget.Core.Services
             var budgetInitial = new BudgetInitial()
             {
               CategoryId= model.CategoryId,
-              Category=model.Category,
               CurrencyId= model.CurrencyId,
-              Currency= model.Currency,
               TypeOfAccountId= model.TypeOfAccountId,
-              TypeOfAccount= model.TypeOfAccount,
               Amount= model.Amount,
               AdditionalInformation= model.AdditionalInformation,
               Date= model.Date
@@ -71,10 +68,52 @@ namespace HouseHoldBudget.Core.Services
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<MyBudgetViewModel>> GetMyBudget(string userId)
+        {
+            var user = await repo.All<UserBudgetInitial>()
+                .Where(u => u.UserId == userId)
+                .Include(ub => ub.BudgetInitial)
+                //.ThenInclude(c=> new{ c.Category, c.Currency, c.TypeOfAccount})
+                .Select(m=> new MyBudgetViewModel
+                {
+                    TypeOfAccount = m.BudgetInitial.TypeOfAccount.Type,
+                    Category = m.BudgetInitial.Category.Name,
+                    Currency = m.BudgetInitial.Currency.CurrencyName,
+                    Amount = m.BudgetInitial.Amount,
+                    AmountInBgn = (m.BudgetInitial.Amount) * (decimal)(m.BudgetInitial.Currency.ExchangeRate),
+                    Date = m.BudgetInitial.Date,
+                    AdditionalInformation = m.BudgetInitial.AdditionalInformation
+                })
+                .ToListAsync();
+
+            if (user == null)
+            {
+                throw new ArgumentException("Invalid user ID");
+            }
+
+            return user;
+        }
+
         public async Task<IEnumerable<TypeOfAccount>> GetTypeOfAccountAsync()
         {
             return await repo.All<TypeOfAccount>()
                 .ToListAsync();
+        }
+
+        public async Task RemoveBudgetInitialFromCollectionAsync(int budgetInitialId, string userId)
+        {
+
+            var budgetInitial = await repo.All<UserBudgetInitial>()
+                .Where(u => u.UserId == userId)
+                .Where(b=> b.BudgetInitialId==budgetInitialId)
+                .FirstOrDefaultAsync();
+
+            if (budgetInitial==null)
+            {
+                throw new ArgumentException("Invalid User ID");
+            }
+
+            repo.Delete<UserBudgetInitial>(budgetInitial);
         }
     }
 }

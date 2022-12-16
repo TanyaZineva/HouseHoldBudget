@@ -1,12 +1,17 @@
 ﻿using HouseHoldBudget.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace HouseHoldBudget.Core.Models.Budget
 {
-    public class AddBudgetViewModel
+    public class EditBudgetViewModel
     {
+
         [Required]
         public int TypeOfAccountId { get; set; }
 
@@ -27,7 +32,7 @@ namespace HouseHoldBudget.Core.Models.Budget
 
         [Required]
         [Precision(18, 2)]
-        public decimal Amount { get; set; } 
+        public decimal Amount { get; set; }
 
         [Required]
         [DataType(DataType.Date)]

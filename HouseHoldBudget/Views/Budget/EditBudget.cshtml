@@ -1,7 +1,7 @@
 ﻿@using HouseHoldBudget.Infrastructure.Data
-@model HouseHoldBudget.Core.Models.Budget.AddBudgetViewModel
+@model HouseHoldBudget.Core.Models.Budget.EditBudgetViewModel
 @{
-    ViewBag.Title = "Add income or expense in your Budget";
+    ViewBag.Title = "Edit your Budget";
 }
 
 <h2 class="text-center">@ViewBag.Title</h2>
@@ -60,7 +60,7 @@
                 <span asp-validation-for="@Model.AdditionalInformation" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <input class="btn btn-primary" type="submit" value="Add" />
+                <input class="btn btn-primary" type="submit" value="Edit"/>
             </div>
         </form>
     </div>
