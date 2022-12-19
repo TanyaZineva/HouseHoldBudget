@@ -64,12 +64,30 @@ namespace HouseHoldBudget.Controllers
             return View("MyBudget", model);
         }
 
-        public async Task<IActionResult> Delete(int budgetInitialId)
+        [HttpPost]
+        public async Task<IActionResult> Delete(MyBudgetViewModel model)
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            await budgetService.RemoveBudgetInitialFromCollectionAsync(budgetInitialId, userId);
+            await budgetService.RemoveBudgetInitialFromCollectionAsync(model, userId);
 
             return RedirectToAction(nameof(MyBudget));
+        }
+       
+        [HttpGet]
+        public async Task<IActionResult> EditBudget(int id)
+        {
+            var model=await budgetService.GetMyInitialBudget(id);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MyHouseHoldBudget()
+        {
+            var userId = User.Claims.FirstOrDefault(u => u.Type == ClaimTypes.NameIdentifier)?.Value;
+            var model = await budgetService.GetMyHouseHoldBudget(userId);
+
+            return View("MyHouseHoldBudget", model);
         }
     }
 }

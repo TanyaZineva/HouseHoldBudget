@@ -1,14 +1,13 @@
-﻿@model IEnumerable<HouseHoldBudget.Core.Models.Budget.MyBudgetViewModel>
+﻿@model List<HouseHoldBudget.Core.Models.Budget.MyHouseHoldBudgetViewModel>
 @using HouseHoldBudget.Infrastructure.Data
 
 @{
     ViewBag.Title = "My Budget";
 }
-<div><b>Table Format Data Displaying in ForEach</b><br /></div>
+<div><b>Table displaying budget in your household</b><br /></div>
 <table class="table table-bordered table-responsive table-hover">
     <tr>
-        <th>Delete</th>
-        <th>Edit</th>
+        <th>Name</th>
         <th>Type of account</th>
         <th>Category</th>
         <th>Currency</th>
@@ -20,14 +19,7 @@
     @foreach (var bInitial in Model)
     {
         <tr>
-            <td>
-                <form method="post" class="input-group-sm" asp-controller="Budget" asp-action="Delete" asp-route-Id="@bInitial.Id">
-                    <input class="fs-6 btn btn-success mb-3 p-2" type="submit" value="Delete"/>
-                </form>
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "EditBudget", new {id=bInitial.Id })
-            </td>
+            <td>@bInitial.Name</td>
             <td>@bInitial.TypeOfAccount</td>
             <td>@bInitial.Category</td>
             <td>@bInitial.Currency</td>

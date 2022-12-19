@@ -39,8 +39,6 @@ namespace HouseHoldBudget.Core.Services
                 throw new ArgumentException("Invalid household Id");
             }
 
-            //if (!user.UserHouseHolds.Any(m => m.HouseHoldId == houseHoldId))
-            //{
             var userHouseHold = new UserHouseHold()
             {
                 HouseHold = houseHold,

@@ -13,7 +13,9 @@ namespace HouseHoldBudget.Core.Contracts
         Task AddBudgetInitialToCollectionAsync(int budgetInitialId, string userId);
         public Task<bool> ExistsUserById(string userId);
         Task <IEnumerable<MyBudgetViewModel>>GetMyBudget(string userId);
-        Task RemoveBudgetInitialFromCollectionAsync(int budgetInitialId, string userId);
+        Task RemoveBudgetInitialFromCollectionAsync(MyBudgetViewModel model, string userId);
+        Task<EditBudgetViewModel> GetMyInitialBudget(int id);
+        Task<List<List<MyHouseHoldBudgetViewModel>>> GetMyHouseHoldBudget(string userId);
 
     }
 }

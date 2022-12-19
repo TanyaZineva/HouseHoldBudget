@@ -3,12 +3,7 @@ using HouseHoldBudget.Core.Models.Budget;
 using HouseHoldBudget.Infrastructure.Data;
 using HouseHoldBudget.Infrastructure.Data.Common;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace HouseHoldBudget.Core.Services
 {
@@ -73,9 +68,9 @@ namespace HouseHoldBudget.Core.Services
             var user = await repo.All<UserBudgetInitial>()
                 .Where(u => u.UserId == userId)
                 .Include(ub => ub.BudgetInitial)
-                //.ThenInclude(c=> new{ c.Category, c.Currency, c.TypeOfAccount})
                 .Select(m=> new MyBudgetViewModel
                 {
+                    Id= m.BudgetInitial.Id,
                     TypeOfAccount = m.BudgetInitial.TypeOfAccount.Type,
                     Category = m.BudgetInitial.Category.Name,
                     Currency = m.BudgetInitial.Currency.CurrencyName,
@@ -94,26 +89,106 @@ namespace HouseHoldBudget.Core.Services
             return user;
         }
 
+        public async Task<List<List<MyHouseHoldBudgetViewModel>>> GetMyHouseHoldBudget(string userId)
+        {
+                
+            var householdId = await repo.All<UserHouseHold>()
+                .Where(u => u.UserId == userId)
+                .Include(h=> h.HouseHold)
+                .Select(m => m.HouseHoldId)
+                .FirstOrDefaultAsync();
+
+            var users = await repo.All<UserHouseHold>()  
+                .Where(u => u.HouseHoldId == householdId)
+                .ToListAsync();
+
+
+            List<List<MyHouseHoldBudgetViewModel>> userBudgets = new List<List<MyHouseHoldBudgetViewModel>>();
+
+            foreach (var user in users)
+            {
+                var userBudget = await repo.All<UserBudgetInitial>()
+                .Where(u => u.UserId == user.UserId)
+                .Include(ub => ub.BudgetInitial)
+                .Select(m => new MyHouseHoldBudgetViewModel
+                {
+                    Id = m.BudgetInitial.Id,
+                    Name = m.User.UserName,
+                    TypeOfAccount = m.BudgetInitial.TypeOfAccount.Type,
+                    Category = m.BudgetInitial.Category.Name,
+                    Currency = m.BudgetInitial.Currency.CurrencyName,
+                    Amount = m.BudgetInitial.Amount,
+                    AmountInBgn = (m.BudgetInitial.Amount) * (decimal)(m.BudgetInitial.Currency.ExchangeRate),
+                    Date = m.BudgetInitial.Date,
+                    AdditionalInformation = m.BudgetInitial.AdditionalInformation
+                })
+                .ToListAsync();
+                
+
+                userBudgets.Add(userBudget);
+            }
+
+            return userBudgets;  
+           
+        }
+
+        public async Task<EditBudgetViewModel> GetMyInitialBudget(int id)
+        {
+            var initial =await repo.All<UserBudgetInitial>()
+                .Where(ib => ib.BudgetInitialId == id)
+                .Include(b => b.BudgetInitial)
+                .Select(b => new EditBudgetViewModel
+                {
+                    Id = b.BudgetInitial.Id,
+                    CategoryId = b.BudgetInitial.Category.Id,
+                    CurrencyId = b.BudgetInitial.Currency.Id,
+                    TypeOfAccountId = b.BudgetInitial.TypeOfAccount.Id,
+                    Amount = b.BudgetInitial.Amount,
+                    AdditionalInformation = b.BudgetInitial.AdditionalInformation,
+                    Date = b.BudgetInitial.Date
+                })
+                .FirstOrDefaultAsync();
+                
+           
+            if (initial == null)
+            {
+                throw new ArgumentException("Invalid budget value");
+            };
+
+            return initial;
+
+        }
+
         public async Task<IEnumerable<TypeOfAccount>> GetTypeOfAccountAsync()
         {
             return await repo.All<TypeOfAccount>()
                 .ToListAsync();
         }
 
-        public async Task RemoveBudgetInitialFromCollectionAsync(int budgetInitialId, string userId)
+        public async Task RemoveBudgetInitialFromCollectionAsync(MyBudgetViewModel model, string userId)
         {
 
-            var budgetInitial = await repo.All<UserBudgetInitial>()
+            var uInitial = await repo.All<UserBudgetInitial>()
                 .Where(u => u.UserId == userId)
-                .Where(b=> b.BudgetInitialId==budgetInitialId)
+                .Where(b => b.BudgetInitialId == model.Id)
                 .FirstOrDefaultAsync();
+                
 
-            if (budgetInitial==null)
+            if (uInitial==null)
             {
                 throw new ArgumentException("Invalid User ID");
             }
 
-            repo.Delete<UserBudgetInitial>(budgetInitial);
+            
+            repo.Delete<UserBudgetInitial>(uInitial);
+
+            var bInitial = await repo.All<BudgetInitial>()
+                .Where(b => b.Id == model.Id)
+                .FirstOrDefaultAsync();
+
+           repo.Delete<BudgetInitial>(bInitial);
+           await repo.SaveChangesAsync();
         }
+
     }
 }

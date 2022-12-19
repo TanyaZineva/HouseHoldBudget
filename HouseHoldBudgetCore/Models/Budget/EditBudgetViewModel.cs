@@ -11,6 +11,8 @@ namespace HouseHoldBudget.Core.Models.Budget
 {
     public class EditBudgetViewModel
     {
+        [Required]
+        public int Id { get; set; }
 
         [Required]
         public int TypeOfAccountId { get; set; }
